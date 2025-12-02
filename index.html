@@ -8,31 +8,27 @@
         :root {
             --color-white: rgba(255, 255, 255, 1);
             --color-black: rgba(0, 0, 0, 1);
-            --color-green-600: rgba(34, 197, 94, 1);
-            --color-yellow-500: rgba(234, 179, 8, 1);
-            --color-red-500: rgba(192, 21, 47, 1);
-            --color-red-400: rgba(255, 84, 89, 1);
-            
-            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --color-green: rgba(34, 197, 94, 1);
+            --color-yellow: rgba(234, 179, 8, 1);
+            --color-red: rgba(220, 38, 38, 1);
+            --color-red-bright: rgba(255, 68, 68, 1);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --font-size-sm: 12px;
             --font-size-base: 14px;
             --font-size-lg: 16px;
-            --font-size-xl: 18px;
-            --font-size-2xl: 20px;
-            --font-size-3xl: 24px;
-            --font-size-4xl: 30px;
-            --font-size-6xl: 48px;
-            --space-4: 4px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            --font-size-3xl: 32px;
             --space-8: 8px;
             --space-12: 12px;
             --space-16: 16px;
             --space-20: 20px;
             --space-24: 24px;
             --space-32: 32px;
-            --radius-base: 8px;
-            --radius-lg: 12px;
+            --space-40: 40px;
+            --radius-base: 10px;
             --radius-xl: 16px;
-            --duration-normal: 250ms;
+            --duration-normal: 300ms;
         }
 
         * {
@@ -45,127 +41,168 @@
             width: 100%;
             height: 100%;
             font-family: var(--font-family-base);
-            background: var(--color-black) !important;
-            transition: background 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: #000;
         }
 
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: var(--space-16);
             min-height: 100vh;
             color: var(--color-white);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            /* Enable vertical scroll when content overflows */
+            overflow-y: auto;
         }
 
+        .main-scroll-wrapper {
+            /* Full width, min height 100vh, flex col */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            padding-bottom: var(--space-40);
+        }
+
+        /* --- COLOR STAGES AND ANIMATIONS --- */
         body.stage-black {
-            background: var(--color-black) !important;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            transition: background 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body.stage-green {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(22, 163, 74, 0.95)) !important;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: background 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body.stage-yellow {
-            background: linear-gradient(135deg, rgba(234, 179, 8, 1), rgba(217, 119, 6, 0.95)) !important;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transition: background 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body.stage-red {
-            background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: background 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body.stage-complete {
-            animation: flash-red 0.6s ease-in-out infinite !important;
+            animation: flash-complete 0.5s ease-in-out infinite;
+            transition: none;
         }
 
-        @keyframes flash-red {
-            0% {
-                background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
-            }
-            25% {
-                background: linear-gradient(135deg, rgba(255, 84, 89, 1), rgba(255, 100, 110, 0.95)) !important;
+        @keyframes flash-complete {
+            0%, 100% {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             }
             50% {
-                background: linear-gradient(135deg, rgba(192, 21, 47, 0.9), rgba(153, 13, 35, 0.85)) !important;
-            }
-            75% {
-                background: linear-gradient(135deg, rgba(255, 100, 110, 1), rgba(255, 120, 130, 0.95)) !important;
-            }
-            100% {
-                background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
+                background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             }
         }
 
+        /* --- CONTAINER --- */
         .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             display: flex;
             flex-direction: column;
             gap: var(--space-32);
             align-items: center;
-            transition: all 0.3s ease;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            visibility: visible;
+            margin: var(--space-24) auto;
         }
 
-        .container.fullscreen-active {
-            display: none;
+        .container.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
+        /* HEADER */
         .header {
             text-align: center;
-            margin-top: var(--space-16);
+            margin-top: var(--space-24);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header h1 {
             font-size: var(--font-size-3xl);
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: var(--space-12);
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
         }
 
         .stage-indicator {
             display: inline-flex;
             align-items: center;
             gap: var(--space-12);
-            background: rgba(255, 255, 255, 0.15);
-            padding: var(--space-12) var(--space-20);
-            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: var(--space-14) var(--space-24);
+            border-radius: 50px;
             font-size: var(--font-size-lg);
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            transition: all var(--duration-normal);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .stage-dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             animation: pulse-dot 2s ease-in-out infinite;
         }
 
         @keyframes pulse-dot {
             0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            50% { opacity: 1; transform: scale(1.3); }
         }
 
         .controls {
             display: flex;
             flex-direction: column;
-            gap: var(--space-16);
+            gap: var(--space-20);
             width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            padding: var(--space-24);
+            background: rgba(0, 0, 0, 0.25);
+            padding: var(--space-32);
             border-radius: var(--radius-xl);
-            backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(30px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .control-group {
@@ -175,103 +212,85 @@
         }
 
         .control-group label {
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-base);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            opacity: 0.9;
+            letter-spacing: 1px;
+            color: #e0e0e0;
         }
 
         .control-group select,
         .control-group input {
-            padding: var(--space-14) var(--space-16);
+            padding: var(--space-14) var(--space-18);
             border: 1.5px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius-base);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.08);
             color: var(--color-white);
             font-size: var(--font-size-base);
             font-family: var(--font-family-base);
+            font-weight: 500;
             transition: all var(--duration-normal);
+            backdrop-filter: blur(8px);
         }
-
         .control-group select:focus,
         .control-group input:focus {
             outline: none;
             border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05);
-        }
-
-        .control-group select option {
-            background: rgba(0, 0, 0, 0.95);
-            color: var(--color-white);
-        }
-
-        .control-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
         }
 
         .custom-time-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--space-12);
-            margin-top: var(--space-8);
+            gap: var(--space-16);
         }
 
         .custom-time-inputs input {
             text-align: center;
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-xl);
             font-weight: 700;
         }
 
         .timer-display {
-            font-size: clamp(52px, 15vw, 80px);
-            font-weight: 800;
+            font-size: clamp(60px, 18vw, 100px);
+            font-weight: 900;
             text-align: center;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.05em;
-            text-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-            min-height: 140px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            letter-spacing: 0.08em;
+            text-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+            min-height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: var(--radius-xl);
-            backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            padding: var(--space-24);
-            transition: all 0.3s ease;
-        }
-
-        .timer-display.fullscreen {
-            font-size: clamp(80px, 25vw, 200px);
-            background: transparent;
-            border: none;
-            min-height: auto;
-            padding: 0;
-            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            padding: var(--space-32);
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease-out 0.1s both;
         }
 
         .timer-display.pulse {
-            animation: pulse-timer 0.5s ease-in-out infinite;
+            animation: pulse-timer 0.6s ease-in-out infinite;
         }
 
         @keyframes pulse-timer {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+            50% { transform: scale(1.1); }
         }
 
         .preset-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             gap: var(--space-12);
             width: 100%;
-            margin-top: var(--space-12);
         }
 
         .btn--preset {
             padding: var(--space-12) var(--space-14);
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
             color: var(--color-white);
             border: 1.5px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius-base);
@@ -280,611 +299,495 @@
             cursor: pointer;
             transition: all var(--duration-normal);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.5px;
         }
-
         .btn--preset:hover {
-            background: rgba(255, 255, 255, 0.22);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.13);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.13);
+            border-color: rgba(255, 255, 255, 0.3);
         }
-
         .btn--preset.active {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 24px rgba(255, 255, 255, 0.4);
-            transform: scale(1.05);
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: var(--space-16);
-            width: 100%;
-            margin-top: var(--space-20);
-        }
-
-        .btn {
-            padding: var(--space-16) var(--space-24);
-            border: none;
-            border-radius: var(--radius-base);
-            font-size: var(--font-size-lg);
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            transition: all var(--duration-normal);
-            backdrop-filter: blur(4px);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.18);
-            color: var(--color-white);
-        }
-
-        .btn:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.28);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.25);
-        }
-
-        .btn:active:not(:disabled) {
-            transform: translateY(-1px);
-        }
-
-        .btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.6) 0%, rgba(139, 92, 246, 0.6) 100%);
+            border-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            transform: scale(1.08);
         }
 
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+            border-radius: 10px;
             overflow: hidden;
-            margin-top: var(--space-16);
+            margin: var(--space-12) 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.27);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.8));
             width: 0%;
             transition: width 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
         }
 
+        /* <--- KEY: BUTTONS BAR ---!> */
+        .button-group {
+            width: 100%;
+            display: flex;
+            gap: var(--space-20);
+            justify-content: stretch;
+            margin-top: var(--space-28);
+            margin-bottom: var(--space-8);
+        }
+        .btn {
+            flex: 1 1;
+            padding: var(--space-18) var(--space-20);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-lg);
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all var(--duration-normal);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            color: var(--color-white);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.23);
+        }
+        .btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255, 255,255,0.13) 100%);
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.5);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* --- FLOATING UI BUTTONS --- */
         .fullscreen-btn {
             position: fixed;
-            top: var(--space-16);
-            right: var(--space-16);
-            width: 44px;
-            height: 44px;
+            top: var(--space-20);
+            right: var(--space-20);
+            width: 60px;
+            height: 60px;
             border-radius: var(--radius-base);
-            background: rgba(255, 255, 255, 0.18);
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1.5px solid rgba(255,255,255,0.3);
             color: var(--color-white);
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
             transition: all var(--duration-normal);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.29);
+            backdrop-filter: blur(14px);
             z-index: 1001;
         }
-
         .fullscreen-btn:hover {
-            background: rgba(255, 255, 255, 0.28);
-            transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.12) 100%);
+            transform: scale(1.12);
+            box-shadow: 0 12px 35px rgba(255,255,255,0.15);
         }
+        .fullscreen-btn.hidden { display: none !important; }
 
-        .fullscreen-btn:active {
-            transform: scale(0.95);
-        }
-
-        .fullscreen-container {
+        /* --- FULLSCREEN OVERLAY --- */
+        .fullscreen-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 9000;
+            padding: var(--space-20);
+            gap: var(--space-40);
         }
+        .fullscreen-overlay.active { display: flex !important;}
 
-        .fullscreen-container.active {
-            display: flex;
+        .fullscreen-timer {
+            font-size: clamp(80px, 50vw, 320px);
+            font-weight: 900;
+            text-align: center;
+            font-family: 'Monaco', 'Courier New', monospace;
+            letter-spacing: 0.1em;
+            text-shadow: 0 15px 60px rgba(0,0,0,0.95);
+            color: var(--color-white);
+            animation: slideDown 0.6s ease-out;
         }
 
         .fullscreen-close-btn {
             position: fixed;
-            top: var(--space-16);
-            right: var(--space-16);
-            width: 56px;
-            height: 56px;
+            top: var(--space-20); right: var(--space-20);
+            width: 80px; height: 80px;
             border-radius: var(--radius-base);
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0.07) 100%);
+            border: 2px solid rgba(255,255,255,0.5);
             color: var(--color-white);
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 44px;
+            font-weight: 800;
             cursor: pointer;
             transition: all var(--duration-normal);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            z-index: 2001;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(19px);
+            z-index: 9001;
         }
-
+        .fullscreen-close-btn.show { display: flex !important;}
         .fullscreen-close-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0.12) 100%);
+            transform: scale(1.13);
         }
 
-        .fullscreen-close-btn:active {
-            transform: scale(0.95);
-        }
-
-        @media (max-width: 600px) {
-            .timer-display {
-                font-size: clamp(40px, 12vw, 60px);
-                min-height: 110px;
-                padding: var(--space-16);
-            }
-
-            .timer-display.fullscreen {
-                font-size: clamp(60px, 20vw, 150px);
-            }
-
-            .header h1 {
-                font-size: var(--font-size-2xl);
-            }
-
-            .button-group {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .controls {
-                padding: var(--space-16);
-            }
-
-            .preset-buttons {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .container {
-                gap: var(--space-24);
-            }
-
-            .fullscreen-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-                top: var(--space-12);
-                right: var(--space-12);
-            }
-
-            .fullscreen-close-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 24px;
-                top: var(--space-12);
-                right: var(--space-12);
-            }
-        }
-
-        @media (max-width: 400px) {
-            .button-group {
-                grid-template-columns: 1fr;
-            }
-
-            .timer-display {
-                font-size: clamp(32px, 10vw, 48px);
-            }
-
-            .timer-display.fullscreen {
-                font-size: clamp(48px, 18vw, 120px);
-            }
-
-            .preset-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: var(--font-size-xl);
-            }
-
-            .stage-indicator {
-                font-size: var(--font-size-base);
-                padding: var(--space-8) var(--space-16);
-            }
-
-            .fullscreen-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-            }
-
-            .fullscreen-close-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 20px;
-            }
-        }
-
+        /* --- ABOUT MODAL --- */
         .about-btn {
             position: fixed;
             bottom: var(--space-20);
             right: var(--space-20);
-            width: 56px;
-            height: 56px;
+            width: 60px; height: 60px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 100%);
+            border: 2px solid rgba(255,255,255,0.23);
             color: var(--color-white);
-            font-size: 24px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all var(--duration-normal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            font-size: 28px; font-weight: 800;
+            cursor: pointer; transition: all var(--duration-normal);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.32);
+            backdrop-filter: blur(17px);
             z-index: 999;
         }
-
         .about-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 100%);
+            transform: scale(1.12);
         }
-
-        .about-btn:active {
-            transform: scale(0.95);
-        }
-
+        .about-btn.hidden { display: none !important;}
         .about-modal {
-            position: fixed;
-            bottom: 80px;
-            right: var(--space-20);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: fixed; bottom: 90px; right: var(--space-20);
+            background: rgba(0,0,0,0.97);
+            border: 2px solid rgba(255,255,255,0.17);
             border-radius: var(--radius-xl);
-            padding: var(--space-20);
+            padding: var(--space-28);
+            min-width: 300px;
             backdrop-filter: blur(20px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             color: var(--color-white);
-            min-width: 280px;
-            max-width: 320px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
+            opacity: 0; visibility: hidden;
+            transform: translateY(12px) scale(0.97);
             transition: all var(--duration-normal);
             z-index: 998;
         }
-
         .about-modal.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            opacity: 1; visibility: visible;
+            transform: translateY(0) scale(1);
         }
 
         .about-modal h3 {
-            font-size: var(--font-size-xl);
-            margin-bottom: var(--space-12);
-            text-align: center;
-            color: rgba(255, 255, 255, 1);
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-12); text-align: center;
+            font-weight: 800;
         }
-
-        .about-modal p {
-            font-size: var(--font-size-sm);
-            line-height: 1.6;
-            margin-bottom: var(--space-16);
-            color: rgba(255, 255, 255, 0.9);
-            text-align: center;
-        }
-
         .about-modal .divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: var(--space-12) 0;
+            height: 1px; background: rgba(255,255,255,0.2); margin: var(--space-16) 0;
         }
-
         .about-modal .contact-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-8);
-            margin: var(--space-8) 0;
-            padding: var(--space-8) var(--space-12);
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-base);
+            display: flex; align-items: center; justify-content: center; gap: var(--space-10);
+            margin: var(--space-12) 0; padding: var(--space-12) var(--space-16);
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius-base); border: 1px solid rgba(255,255,255,0.13);
             transition: all var(--duration-normal);
         }
-
         .about-modal .contact-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
+            background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.25);}
         .about-modal .contact-item a {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255,255,255,0.94);
             text-decoration: none;
-            font-size: var(--font-size-sm);
-            word-break: break-all;
+            font-size: var(--font-size-sm); font-weight: 600; word-break: break-all;
         }
-
-        .about-modal .contact-item a:hover {
-            color: var(--color-white);
-        }
-
         .close-modal {
             position: absolute;
-            top: var(--space-8);
-            right: var(--space-8);
-            width: 28px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 50%;
-            color: var(--color-white);
-            font-size: 18px;
-            cursor: pointer;
-            transition: all var(--duration-normal);
+            top: var(--space-12); right: var(--space-12);
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,0.17); border: none;
+            border-radius: 50%; color: var(--color-white); font-size: 20px;
+            cursor: pointer; transition: all 250ms;
+            display: flex; align-items: center; justify-content: center;
         }
-
         .close-modal:hover {
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255,255,255,0.2); transform: rotate(90deg);
+        }
+        /* Responsive Tweaks */
+        @media (max-width: 768px) {
+            .controls { padding: var(--space-18);}
+            .button-group { gap: var(--space-10); }
+            .btn { padding: var(--space-10) var(--space-10); font-size: var(--font-size-base);}
+            .fullscreen-timer { font-size: clamp(60px, 40vw, 180px);}
+        }
+        @media (max-width: 480px) {
+            .container { padding: 0 var(--space-8);}
+            .header h1 { font-size: var(--font-size-2xl);}
+            .timer-display { font-size: clamp(40px, 14vw, 70px); min-height: 130px;}
+            .button-group { flex-direction: column; gap: var(--space-8);}
+            .btn { font-size: var(--font-size-sm);}
+            .fullscreen-btn, .about-btn { width: 48px; height: 48px; font-size: 19px;}
+            .fullscreen-close-btn { width: 60px; height: 60px; font-size: 30px;}
+            .fullscreen-timer { font-size: clamp(38px, 28vw, 80px);}
         }
     </style>
 </head>
 <body class="stage-black">
-    <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen Mode">⛶</button>
-
-    <div class="container" id="mainContainer">
-        <div class="header">
-            <h1>🎤 Toastmasters Timer Pro</h1>
-            <div class="stage-indicator" id="stageIndicator">
-                <span class="stage-dot"></span>
-                <span>Select a Speech</span>
-            </div>
-        </div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="speechType">🗣️ Select Speech Type</label>
-                <select id="speechType">
-                    <option value="">-- Choose a speech type --</option>
-                    <option value="prepared">Prepared Speech – 5 to 7 minutes</option>
-                    <option value="icebreaker">Ice Breaker – 4 to 6 minutes</option>
-                    <option value="tabletopics">Table Topics – 1 to 2 minutes</option>
-                    <option value="evaluation">Speech Evaluation – 2 to 3 minutes</option>
-                    <option value="pathways8-10">Extended Pathways – 8 to 10 minutes</option>
-                    <option value="pathways10-12">Extended Pathways – 10 to 12 minutes</option>
-                    <option value="pathways18-22">Extended Pathways – 18 to 22 minutes</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>⏱️ Or Set Custom Time</label>
-                <div class="custom-time-inputs">
-                    <input type="number" id="customMinutes" placeholder="Minutes" min="0" max="60">
-                    <input type="number" id="customSeconds" placeholder="Seconds" min="0" max="59">
+    <div class="main-scroll-wrapper">
+        <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen Mode">⛶</button>
+        <div class="container" id="mainContainer">
+            <div class="header">
+                <h1>🎤 Toastmasters Timer</h1>
+                <div class="stage-indicator" id="stageIndicator">
+                    <span class="stage-dot"></span>
+                    <span>Select a Speech</span>
                 </div>
             </div>
-
-            <div class="preset-buttons" id="presetButtons"></div>
-        </div>
-
-        <div class="timer-display" id="timerDisplay">00:00</div>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <div class="button-group" id="buttonGroup">
-            <button class="btn" id="startBtn">▶ Start</button>
-            <button class="btn" id="pauseBtn" disabled>⏸ Pause</button>
-            <button class="btn" id="resetBtn">🔄 Reset</button>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="speechType">🗣️ Select Speech Type</label>
+                    <select id="speechType">
+                        <option value="">-- Choose Speech Type --</option>
+                        <option value="prepared">Prepared Speech – 5-7 min</option>
+                        <option value="icebreaker">Ice Breaker – 4-6 min</option>
+                        <option value="tabletopics">Table Topics – 1-2 min</option>
+                        <option value="evaluation">Speech Evaluation – 2-3 min</option>
+                        <option value="pathways8-10">Extended Pathways – 8-10 min</option>
+                        <option value="pathways10-12">Extended Pathways – 10-12 min</option>
+                        <option value="pathways18-22">Extended Pathways – 18-22 min</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>⏱️ Custom Time</label>
+                    <div class="custom-time-inputs">
+                        <input type="number" id="customMinutes" placeholder="Minutes" min="0" max="60">
+                        <input type="number" id="customSeconds" placeholder="Seconds" min="0" max="59">
+                    </div>
+                </div>
+                <div class="preset-buttons" id="presetButtons"></div>
+            </div>
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="button-group">
+                <button class="btn" id="startBtn">▶ START</button>
+                <button class="btn" id="pauseBtn" disabled>⏸ PAUSE</button>
+                <button class="btn" id="resetBtn">🔄 RESET</button>
+            </div>
         </div>
     </div>
-
-    <div class="fullscreen-container" id="fullscreenContainer">
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
         <button class="fullscreen-close-btn" id="fullscreenCloseBtn">✕</button>
-        <div class="timer-display fullscreen" id="fullscreenTimerDisplay">00:00</div>
+        <div class="fullscreen-timer" id="fullscreenTimer">00:00</div>
     </div>
-
     <button class="about-btn" id="aboutBtn" title="About Developer">?</button>
-
     <div class="about-modal" id="aboutModal">
         <button class="close-modal" id="closeModal">✕</button>
         <h3>👨‍💻 Developer</h3>
-        <p style="font-weight: 600; color: rgba(255, 255, 255, 1); margin-bottom: var(--space-8);">Rishib More</p>
+        <p style="font-weight: 700; margin-bottom: var(--space-12); text-align: center;">Rishib More</p>
         <div class="divider"></div>
         <div class="contact-item">
             <span>📧</span>
             <a href="mailto:rishibmore141@gmail.com">rishibmore141@gmail.com</a>
         </div>
+        <div class="contact-item">
+            <span>🐙</span>
+            <a href="https://github.com/yungrishib" target="_blank">github.com/yungrishib</a>
+        </div>
     </div>
-
     <script>
-        const timerState = {
+        const FullscreenAPI = {
+            request: (elem) => {
+                if (elem.requestFullscreen) return elem.requestFullscreen();
+                if (elem.mozRequestFullScreen) return elem.mozRequestFullScreen();
+                if (elem.webkitRequestFullscreen) return elem.webkitRequestFullscreen();
+                if (elem.msRequestFullscreen) return elem.msRequestFullscreen();
+            },
+            exit: () => {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
+            },
+            isActive: () => !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement)
+        };
+
+        const state = {
             timeLeft: 0,
             totalTime: 0,
             isRunning: false,
-            intervalId: null,
-            currentStage: 'black',
-            selectedSpeech: null,
+            timerInterval: null,
+            stage: 'black',
             isFullscreen: false
         };
 
-        const speechTypes = {
-            prepared: { name: 'Prepared Speech', range: '5–7 min', maxTime: 7 * 60 },
-            icebreaker: { name: 'Ice Breaker', range: '4–6 min', maxTime: 6 * 60 },
-            tabletopics: { name: 'Table Topics', range: '1–2 min', maxTime: 2 * 60 },
-            evaluation: { name: 'Speech Evaluation', range: '2–3 min', maxTime: 3 * 60 },
-            'pathways8-10': { name: 'Extended Pathways', range: '8–10 min', maxTime: 10 * 60 },
-            'pathways10-12': { name: 'Extended Pathways', range: '10–12 min', maxTime: 12 * 60 },
-            'pathways18-22': { name: 'Extended Pathways', range: '18–22 min', maxTime: 22 * 60 }
+        const speeches = {
+            prepared: { name: 'Prepared Speech', time: 7 * 60 },
+            icebreaker: { name: 'Ice Breaker', time: 6 * 60 },
+            tabletopics: { name: 'Table Topics', time: 2 * 60 },
+            evaluation: { name: 'Speech Evaluation', time: 3 * 60 },
+            'pathways8-10': { name: 'Pathways 8-10', time: 10 * 60 },
+            'pathways10-12': { name: 'Pathways 10-12', time: 12 * 60 },
+            'pathways18-22': { name: 'Pathways 18-22', time: 22 * 60 }
         };
 
-        const speechTypeSelect = document.getElementById('speechType');
-        const customMinutesInput = document.getElementById('customMinutes');
-        const customSecondsInput = document.getElementById('customSeconds');
-        const timerDisplay = document.getElementById('timerDisplay');
-        const fullscreenTimerDisplay = document.getElementById('fullscreenTimerDisplay');
-        const stageIndicator = document.getElementById('stageIndicator');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const presetButtonsContainer = document.getElementById('presetButtons');
-        const progressFill = document.getElementById('progressFill');
-        const body = document.body;
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const fullscreenCloseBtn = document.getElementById('fullscreenCloseBtn');
-        const fullscreenContainer = document.getElementById('fullscreenContainer');
-        const mainContainer = document.getElementById('mainContainer');
+        const dom = {
+            body: document.body,
+            container: document.getElementById('mainContainer'),
+            timerDisplay: document.getElementById('timerDisplay'),
+            progressFill: document.getElementById('progressFill'),
+            stageIndicator: document.getElementById('stageIndicator'),
+            startBtn: document.getElementById('startBtn'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            speechSelect: document.getElementById('speechType'),
+            minutesInput: document.getElementById('customMinutes'),
+            secondsInput: document.getElementById('customSeconds'),
+            presetContainer: document.getElementById('presetButtons'),
+            fullscreenBtn: document.getElementById('fullscreenBtn'),
+            fullscreenOverlay: document.getElementById('fullscreenOverlay'),
+            fullscreenTimer: document.getElementById('fullscreenTimer'),
+            fullscreenCloseBtn: document.getElementById('fullscreenCloseBtn'),
+            aboutBtn: document.getElementById('aboutBtn'),
+            aboutModal: document.getElementById('aboutModal'),
+            closeModalBtn: document.getElementById('closeModal')
+        };
 
-        function initializePresets() {
-            presetButtonsContainer.innerHTML = '';
-            Object.entries(speechTypes).forEach(([key, value]) => {
+        function initPresets() {
+            dom.presetContainer.innerHTML = '';
+            Object.entries(speeches).forEach(([key, data]) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn--preset';
-                btn.textContent = value.name.split('(')[0].trim();
-                btn.title = value.name + ' ' + value.range;
+                btn.textContent = data.name;
                 btn.dataset.key = key;
-                btn.addEventListener('click', () => selectPreset(key));
-                presetButtonsContainer.appendChild(btn);
+                btn.addEventListener('click', () => selectSpeech(key));
+                dom.presetContainer.appendChild(btn);
             });
         }
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        function formatTime(secs) {
+            const mins = Math.floor(secs / 60);
+            const s = secs % 60;
+            return `${String(mins).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
-        function getPercentageElapsed() {
-            if (timerState.totalTime === 0) return 0;
-            return ((timerState.totalTime - timerState.timeLeft) / timerState.totalTime) * 100;
+        function getProgress() {
+            return state.totalTime ? ((state.totalTime - state.timeLeft) / state.totalTime) * 100 : 0;
         }
 
         function updateStage() {
-            if (!timerState.isRunning) return;
-
-            const percentElapsed = getPercentageElapsed();
+            const prog = getProgress();
             let newStage = 'black';
 
-            if (timerState.timeLeft === 0) {
+            if (state.timeLeft === 0 && state.isRunning) {
                 newStage = 'complete';
-            } else if (percentElapsed >= 100) {
+            } else if (prog >= 100) {
                 newStage = 'red';
-            } else if (percentElapsed >= 70) {
+            } else if (prog >= 70) {
                 newStage = 'yellow';
-            } else if (percentElapsed >= 30) {
+            } else if (prog >= 30) {
                 newStage = 'green';
-            } else {
-                newStage = 'black';
             }
 
-            if (newStage !== timerState.currentStage) {
-                setStage(newStage);
-            }
-        }
+            if (newStage !== state.stage) {
+                state.stage = newStage;
+                dom.body.classList.remove('stage-black', 'stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+                dom.body.classList.add(`stage-${newStage}`);
 
-        function setStage(stage) {
-            timerState.currentStage = stage;
+                const indicators = {
+                    black: '<span class="stage-dot"></span><span>Ready to Start</span>',
+                    green: '<span class="stage-dot" style="background: #10b981;"></span><span>🟩 Green</span>',
+                    yellow: '<span class="stage-dot" style="background: #f59e0b;"></span><span>🟨 Yellow</span>',
+                    red: '<span class="stage-dot" style="background: #ef4444;"></span><span>🟥 Red</span>',
+                    complete: '<span class="stage-dot" style="background: #ff6b6b; animation: none;"></span><span>⏹️ Time Up!</span>'
+                };
+                dom.stageIndicator.innerHTML = indicators[newStage];
 
-            body.classList.remove('stage-black', 'stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
-
-            switch (stage) {
-                case 'green':
-                    body.classList.add('stage-green');
-                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(34, 197, 94, 1);"></span><span>🟩 Green Stage</span>';
-                    break;
-                case 'yellow':
-                    body.classList.add('stage-yellow');
-                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(234, 179, 8, 1);"></span><span>🟨 Yellow Stage</span>';
-                    break;
-                case 'red':
-                    body.classList.add('stage-red');
-                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(192, 21, 47, 1);"></span><span>🟥 Red Stage</span>';
-                    break;
-                case 'complete':
-                    body.classList.add('stage-complete');
-                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(255, 84, 89, 1); animation: none;"></span><span>⏹️ Time Up!</span>';
+                if (newStage === 'complete') {
                     playSound();
-                    break;
-                default:
-                    body.classList.add('stage-black');
-                    stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
-                    break;
+                }
             }
         }
 
         function playSound() {
             try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.5);
-            } catch (e) {
-                console.log('Audio not available');
-            }
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 800;
+                osc.type = 'sine';
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (e) {}
         }
 
         function updateDisplay() {
-            timerDisplay.textContent = formatTime(timerState.timeLeft);
-            fullscreenTimerDisplay.textContent = formatTime(timerState.timeLeft);
-            const progress = getPercentageElapsed();
-            progressFill.style.width = progress + '%';
+            const time = formatTime(state.timeLeft);
+            dom.timerDisplay.textContent = time;
+            dom.fullscreenTimer.textContent = time;
+            dom.progressFill.style.width = getProgress() + '%';
             updateStage();
 
-            if (timerState.timeLeft <= 3 && timerState.timeLeft > 0 && timerState.isRunning) {
-                timerDisplay.classList.add('pulse');
-                fullscreenTimerDisplay.classList.add('pulse');
+            if (state.timeLeft <= 3 && state.timeLeft > 0 && state.isRunning) {
+                dom.timerDisplay.classList.add('pulse');
             } else {
-                timerDisplay.classList.remove('pulse');
-                fullscreenTimerDisplay.classList.remove('pulse');
+                dom.timerDisplay.classList.remove('pulse');
+            }
+        }
+
+        function enterFullscreen() {
+            state.isFullscreen = true;
+            dom.container.classList.add('hidden');
+            dom.fullscreenOverlay.classList.add('active');
+            dom.fullscreenBtn.classList.add('hidden');
+            dom.fullscreenCloseBtn.classList.add('show');
+            dom.aboutBtn.classList.add('hidden');
+            FullscreenAPI.request(document.documentElement);
+        }
+
+        function exitFullscreen() {
+            state.isFullscreen = false;
+            dom.container.classList.remove('hidden');
+            dom.fullscreenOverlay.classList.remove('active');
+            dom.fullscreenBtn.classList.remove('hidden');
+            dom.fullscreenCloseBtn.classList.remove('show');
+            dom.aboutBtn.classList.remove('hidden');
+            if (FullscreenAPI.isActive()) {
+                FullscreenAPI.exit();
             }
         }
 
         function start() {
-            if (timerState.timeLeft === 0) return;
+            if (state.timeLeft === 0) return;
+            state.isRunning = true;
+            dom.startBtn.disabled = true;
+            dom.pauseBtn.disabled = false;
+            dom.speechSelect.disabled = true;
+            dom.minutesInput.disabled = true;
+            dom.secondsInput.disabled = true;
 
-            timerState.isRunning = true;
-            startBtn.disabled = true;
-            pauseBtn.disabled = false;
-            speechTypeSelect.disabled = true;
-            customMinutesInput.disabled = true;
-            customSecondsInput.disabled = true;
-
-            // Show fullscreen on start if not already showing
-            if (!timerState.isFullscreen) {
+            if (!state.isFullscreen) {
                 enterFullscreen();
             }
 
-            timerState.intervalId = setInterval(() => {
-                if (timerState.timeLeft > 0) {
-                    timerState.timeLeft--;
+            state.timerInterval = setInterval(() => {
+                if (state.timeLeft > 0) {
+                    state.timeLeft--;
                     updateDisplay();
                 } else {
                     stop();
@@ -893,172 +796,132 @@
         }
 
         function togglePause() {
-            if (timerState.isRunning) {
-                clearInterval(timerState.intervalId);
-                timerState.isRunning = false;
-                pauseBtn.textContent = '▶ Resume';
-                startBtn.disabled = false;
+            if (state.isRunning) {
+                clearInterval(state.timerInterval);
+                state.isRunning = false;
+                dom.pauseBtn.textContent = '▶ RESUME';
+                dom.startBtn.disabled = false;
             } else {
-                start();
-                pauseBtn.textContent = '⏸ Pause';
+                state.isRunning = true;
+                dom.pauseBtn.textContent = '⏸ PAUSE';
+                dom.startBtn.disabled = true;
+
+                state.timerInterval = setInterval(() => {
+                    if (state.timeLeft > 0) {
+                        state.timeLeft--;
+                        updateDisplay();
+                    } else {
+                        stop();
+                    }
+                }, 1000);
             }
         }
 
         function stop() {
-            clearInterval(timerState.intervalId);
-            timerState.isRunning = false;
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-            pauseBtn.textContent = '⏸ Pause';
-            speechTypeSelect.disabled = false;
-            customMinutesInput.disabled = false;
-            customSecondsInput.disabled = false;
+            clearInterval(state.timerInterval);
+            state.isRunning = false;
+            dom.startBtn.disabled = false;
+            dom.pauseBtn.disabled = true;
+            dom.pauseBtn.textContent = '⏸ PAUSE';
+            dom.speechSelect.disabled = false;
+            dom.minutesInput.disabled = false;
+            dom.secondsInput.disabled = false;
         }
 
         function reset() {
-            clearInterval(timerState.intervalId);
-            timerState.isRunning = false;
-            timerState.timeLeft = timerState.totalTime;
-            
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-            pauseBtn.textContent = '⏸ Pause';
-            speechTypeSelect.disabled = false;
-            customMinutesInput.disabled = false;
-            customSecondsInput.disabled = false;
+            clearInterval(state.timerInterval);
+            state.isRunning = false;
+            state.timeLeft = state.totalTime;
+            dom.startBtn.disabled = false;
+            dom.pauseBtn.disabled = true;
+            dom.pauseBtn.textContent = '⏸ PAUSE';
+            dom.speechSelect.disabled = false;
+            dom.minutesInput.disabled = false;
+            dom.secondsInput.disabled = false;
 
-            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
-            body.classList.add('stage-black');
-            timerState.currentStage = 'black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
-            progressFill.style.width = '0%';
+            dom.body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+            dom.body.classList.add('stage-black');
+            state.stage = 'black';
+            dom.stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            dom.progressFill.style.width = '0%';
 
-            // Exit fullscreen on reset
-            if (timerState.isFullscreen) {
-                exitFullscreen();
-            }
-
+            exitFullscreen();
             updateDisplay();
         }
 
-        function selectPreset(key) {
-            const speech = speechTypes[key];
-            timerState.totalTime = speech.maxTime;
-            timerState.timeLeft = speech.maxTime;
-            timerState.selectedSpeech = key;
+        function selectSpeech(key) {
+            state.totalTime = speeches[key].time;
+            state.timeLeft = speeches[key].time;
 
-            document.querySelectorAll('.btn--preset').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.key === key);
+            document.querySelectorAll('.btn--preset').forEach(b => {
+                b.classList.toggle('active', b.dataset.key === key);
             });
 
-            customMinutesInput.value = '';
-            customSecondsInput.value = '';
-            speechTypeSelect.value = '';
+            dom.minutesInput.value = '';
+            dom.secondsInput.value = '';
+            dom.speechSelect.value = '';
 
-            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
-            body.classList.add('stage-black');
-            timerState.currentStage = 'black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
-            progressFill.style.width = '0%';
+            dom.body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+            dom.body.classList.add('stage-black');
+            state.stage = 'black';
+            dom.stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            dom.progressFill.style.width = '0%';
 
             updateDisplay();
         }
 
         function setCustomTime() {
-            const mins = parseInt(customMinutesInput.value) || 0;
-            const secs = parseInt(customSecondsInput.value) || 0;
-            const totalSeconds = mins * 60 + secs;
-
-            if (totalSeconds === 0) return;
-
-            timerState.totalTime = totalSeconds;
-            timerState.timeLeft = totalSeconds;
-            timerState.selectedSpeech = null;
-
-            document.querySelectorAll('.btn--preset').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            speechTypeSelect.value = '';
-
-            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
-            body.classList.add('stage-black');
-            timerState.currentStage = 'black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
-            progressFill.style.width = '0%';
-
+            const mins = parseInt(dom.minutesInput.value) || 0;
+            const secs = parseInt(dom.secondsInput.value) || 0;
+            const total = mins * 60 + secs;
+            if (total === 0) return;
+            state.totalTime = total; state.timeLeft = total;
+            document.querySelectorAll('.btn--preset').forEach(b => b.classList.remove('active'));
+            dom.speechSelect.value = '';
+            dom.body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+            dom.body.classList.add('stage-black');
+            state.stage = 'black';
+            dom.stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            dom.progressFill.style.width = '0%';
             updateDisplay();
         }
 
-        function enterFullscreen() {
-            timerState.isFullscreen = true;
-            mainContainer.classList.add('fullscreen-active');
-            fullscreenContainer.classList.add('active');
-            fullscreenBtn.style.display = 'none';
-            document.getElementById('aboutBtn').style.display = 'none';
-        }
+        dom.startBtn.addEventListener('click', start);
+        dom.pauseBtn.addEventListener('click', togglePause);
+        dom.resetBtn.addEventListener('click', reset);
+        dom.fullscreenBtn.addEventListener('click', enterFullscreen);
+        dom.fullscreenCloseBtn.addEventListener('click', exitFullscreen);
+        dom.speechSelect.addEventListener('change', (e) => e.target.value && selectSpeech(e.target.value));
+        dom.minutesInput.addEventListener('change', setCustomTime);
+        dom.secondsInput.addEventListener('change', setCustomTime);
 
-        function exitFullscreen() {
-            timerState.isFullscreen = false;
-            mainContainer.classList.remove('fullscreen-active');
-            fullscreenContainer.classList.remove('active');
-            fullscreenBtn.style.display = 'flex';
-            document.getElementById('aboutBtn').style.display = 'flex';
-        }
-
-        // Event listeners
-        startBtn.addEventListener('click', start);
-        pauseBtn.addEventListener('click', togglePause);
-        resetBtn.addEventListener('click', reset);
-
-        fullscreenBtn.addEventListener('click', enterFullscreen);
-        fullscreenCloseBtn.addEventListener('click', exitFullscreen);
-
-        speechTypeSelect.addEventListener('change', (e) => {
-            if (e.target.value) {
-                selectPreset(e.target.value);
-            }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && state.isFullscreen) exitFullscreen();
         });
 
-        customMinutesInput.addEventListener('change', setCustomTime);
-        customSecondsInput.addEventListener('change', setCustomTime);
-
-        // Keyboard escape to exit fullscreen
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && timerState.isFullscreen) {
+        document.addEventListener('fullscreenchange', () => {
+            if (!FullscreenAPI.isActive() && state.isFullscreen) {
                 exitFullscreen();
             }
         });
 
-        // Initialize
-        initializePresets();
-        body.classList.add('stage-black');
-        timerDisplay.textContent = '00:00';
-        fullscreenTimerDisplay.textContent = '00:00';
-        stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Select a Speech Type</span>';
-
-        // About Modal
-        const aboutBtn = document.getElementById('aboutBtn');
-        const aboutModal = document.getElementById('aboutModal');
-        const closeModal = document.getElementById('closeModal');
-
-        aboutBtn.addEventListener('click', () => {
-            aboutModal.classList.toggle('show');
+        dom.aboutBtn.addEventListener('click', () => {
+            dom.aboutModal.classList.toggle('show');
         });
 
-        closeModal.addEventListener('click', (e) => {
-            e.stopPropagation();
-            aboutModal.classList.remove('show');
+        dom.closeModalBtn.addEventListener('click', () => {
+            dom.aboutModal.classList.remove('show');
         });
 
         document.addEventListener('click', (e) => {
-            if (!aboutBtn.contains(e.target) && !aboutModal.contains(e.target)) {
-                aboutModal.classList.remove('show');
+            if (!dom.aboutBtn.contains(e.target) && !dom.aboutModal.contains(e.target)) {
+                dom.aboutModal.classList.remove('show');
             }
         });
 
-        aboutModal.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        initPresets();
+        dom.body.classList.add('stage-black');
+        updateDisplay();
     </script>
 </body>
 </html>
