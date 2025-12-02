@@ -6,318 +6,649 @@
     <title>Toastmasters Speech Timer Pro</title>
     <style>
         :root {
-            --color-white: #fff;
-            --color-black: #000;
-            --color-green: #22c55e;
-            --color-green-dark: #16a34a;
-            --color-yellow: #eab308;
-            --color-yellow-dark: #ca8a04;
-            --color-red: #c0152f;
-            --color-red-bright: #ff5459;
-
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-green-600: rgba(34, 197, 94, 1);
+            --color-yellow-500: rgba(234, 179, 8, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            
             --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-size-lg: 18px;
-            --font-size-2xl: 28px;
-            --font-size-3xl: 34px;
-            --font-size-5xl: 58px;
-            --radius-xl: 16px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-size-6xl: 48px;
+            --space-4: 4px;
+            --space-8: 8px;
             --space-12: 12px;
             --space-16: 16px;
             --space-20: 20px;
+            --space-24: 24px;
             --space-32: 32px;
-            --duration-fast: 150ms;
-            --duration: 350ms;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --duration-normal: 250ms;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         html, body {
+            width: 100%;
             height: 100%;
-        }
-        body {
-            min-height: 100vh;
-            margin: 0;
             font-family: var(--font-family-base);
-            color: var(--color-white);
-            background: var(--color-black);
-            transition: background 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+            background: var(--color-black) !important;
+            transition: background 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: var(--space-20);
+            padding: var(--space-16);
+            min-height: 100vh;
+            color: var(--color-white);
         }
+
         body.stage-black {
             background: var(--color-black) !important;
         }
+
         body.stage-green {
-            background: linear-gradient(135deg, var(--color-green), var(--color-green-dark)) !important;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 1), rgba(22, 163, 74, 0.95)) !important;
         }
+
         body.stage-yellow {
-            background: linear-gradient(135deg, var(--color-yellow), var(--color-yellow-dark)) !important;
+            background: linear-gradient(135deg, rgba(234, 179, 8, 1), rgba(217, 119, 6, 0.95)) !important;
         }
+
         body.stage-red {
-            background: linear-gradient(135deg, var(--color-red), #7a1123) !important;
+            background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
         }
+
         body.stage-complete {
-            animation: flash-red 0.6s linear infinite !important;
+            animation: flash-red 0.6s ease-in-out infinite !important;
         }
+
         @keyframes flash-red {
-            0%, 100% { background: linear-gradient(135deg, var(--color-red), #a10f27) !important; }
-            30% { background: linear-gradient(135deg, var(--color-red-bright), #fd8691) !important; }
-            60% { background: linear-gradient(135deg, var(--color-red), #910818) !important; }
-            80% { background: linear-gradient(135deg, var(--color-red-bright), #ff4a54) !important; }
+            0% {
+                background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
+            }
+            25% {
+                background: linear-gradient(135deg, rgba(255, 84, 89, 1), rgba(255, 100, 110, 0.95)) !important;
+            }
+            50% {
+                background: linear-gradient(135deg, rgba(192, 21, 47, 0.9), rgba(153, 13, 35, 0.85)) !important;
+            }
+            75% {
+                background: linear-gradient(135deg, rgba(255, 100, 110, 1), rgba(255, 120, 130, 0.95)) !important;
+            }
+            100% {
+                background: linear-gradient(135deg, rgba(192, 21, 47, 1), rgba(153, 13, 35, 0.95)) !important;
+            }
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
-            background: rgba(16,16,16,0.82);
-            border-radius: var(--radius-xl);
-            box-shadow: 0 6px 36px 8px rgba(0,0,0,0.35);
-            padding: var(--space-32) var(--space-16) var(--space-20) var(--space-16);
+            max-width: 700px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: var(--space-32);
-            backdrop-filter: blur(10px);
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .container.fullscreen-active {
+            display: none;
         }
 
         .header {
             text-align: center;
+            margin-top: var(--space-16);
         }
+
         .header h1 {
             font-size: var(--font-size-3xl);
+            font-weight: 700;
             margin-bottom: var(--space-12);
-            font-weight: 800;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            letter-spacing: -0.02em;
         }
+
         .stage-indicator {
             display: inline-flex;
             align-items: center;
-            gap: 9px;
-            background: rgba(255,255,255,0.13);
-            padding: 5px 18px;
-            border-radius: 999px;
+            gap: var(--space-12);
+            background: rgba(255, 255, 255, 0.15);
+            padding: var(--space-12) var(--space-20);
+            border-radius: 9999px;
             font-size: var(--font-size-lg);
-            font-weight: 800;
-            box-shadow: 0 3px 18px rgba(0,0,0,0.18);
-            transition: background var(--duration);
-            margin-bottom: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all var(--duration-normal);
         }
+
         .stage-dot {
             display: inline-block;
-            width: 13px; height: 13px; border-radius: 50%;
-            background: rgba(255,255,255,0.6);
-            animation: pulse-dot 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            animation: pulse-dot 2s ease-in-out infinite;
         }
+
         @keyframes pulse-dot {
-            0%,100%{ opacity:.7; transform:scale(1);}
-            50%{ opacity:1; transform:scale(1.21);}
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         .controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
             width: 100%;
-            background: rgba(0,0,0,0.43);
+            background: rgba(0, 0, 0, 0.4);
+            padding: var(--space-24);
             border-radius: var(--radius-xl);
-            padding: var(--space-16);
-            margin-bottom: var(--space-16);
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
+
         .control-group {
-            margin-bottom:var(--space-16);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-10);
         }
-        .control-group label{
-            font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;opacity:0.79;
+
+        .control-group label {
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.9;
         }
-        .control-group select,.control-group input{
-            margin-top:7px;
-            padding:10px 14px;
-            font-size: var(--font-size-lg);
-            width: 100%;
-            background:rgba(36,37,41,0.84);
-            border:1.7px solid rgba(255,255,255,0.15);
-            border-radius:10px;
-            color:var(--color-white);
-            margin-bottom: 2px;
+
+        .control-group select,
+        .control-group input {
+            padding: var(--space-14) var(--space-16);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-base);
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--color-white);
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-base);
+            transition: all var(--duration-normal);
         }
+
         .control-group select:focus,
         .control-group input:focus {
-            outline:none; border-color:rgba(34,197,94,0.55);
-            background:rgba(44,49,59,0.86);
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05);
         }
-        .preset-buttons {
-            margin-top: 1px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
+
+        .control-group select option {
+            background: rgba(0, 0, 0, 0.95);
+            color: var(--color-white);
         }
-        .btn--preset {
-            padding:9px 13px;
-            border-radius:10px;
-            background:rgba(255,255,255,0.13);
-            font-size:13px;
-            font-weight:700;
-            color:#fff;
-            border:1.3px solid rgba(255,255,255,0.19);
-            cursor:pointer;
-            transition:background var(--duration-fast),transform var(--duration-fast);
-        }
-        .btn--preset.active,.btn--preset:hover {
-            background:rgba(34,197,94,0.21);
-            color:#fff;
-            transform:scale(1.06);
+
+        .control-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .custom-time-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: var(--space-12);
+            margin-top: var(--space-8);
+        }
+
+        .custom-time-inputs input {
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: 700;
         }
 
         .timer-display {
-            width:95%; min-width:170px;max-width:450px;
-            font-size: clamp(44px, 13vw, 80px);
-            font-family:'Courier New',monospace;
+            font-size: clamp(52px, 15vw, 80px);
             font-weight: 800;
-            letter-spacing:0.03em;
-            text-align:center;
-            background:rgba(0,0,0,0.24);
-            border-radius:var(--radius-xl);
-            border:1.5px solid rgba(255,255,255,0.10);
-            box-shadow:0 4px 32px rgba(0,0,0,0.08);
-            padding: var(--space-20);
-            margin-bottom: 1px;
-            transition:all .22s ease;
-            user-select:none;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+            text-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            padding: var(--space-24);
+            transition: all 0.3s ease;
         }
+
+        .timer-display.fullscreen {
+            font-size: clamp(80px, 25vw, 200px);
+            background: transparent;
+            border: none;
+            min-height: auto;
+            padding: 0;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
         .timer-display.pulse {
-            animation: pulse-timer .6s cubic-bezier(.68,-.55,.27,1.55) infinite;
+            animation: pulse-timer 0.5s ease-in-out infinite;
         }
+
         @keyframes pulse-timer {
-            0%,100%{ transform:scale(1);}
-            50%{ transform:scale(1.17);}
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: var(--space-12);
+            width: 100%;
+            margin-top: var(--space-12);
+        }
+
+        .btn--preset {
+            padding: var(--space-12) var(--space-14);
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--color-white);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--duration-normal);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .btn--preset:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn--preset.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 24px rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
         .button-group {
-            width:100%;
-            margin-top:var(--space-12);
-            display:grid;
-            grid-template-columns:1fr 1fr 1fr;
-            gap:var(--space-16);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-16);
+            width: 100%;
+            margin-top: var(--space-20);
         }
+
         .btn {
-            border:none;
-            border-radius:9px;
-            font-size:17.5px;
-            letter-spacing:0.06em;
-            padding:12px 0;
-            font-weight:700;
-            background:rgba(255,255,255,0.16);
-            color:var(--color-white);
-            cursor:pointer;
-            transition: background .2s,transform .15s;
+            padding: var(--space-16) var(--space-24);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: all var(--duration-normal);
+            backdrop-filter: blur(4px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.18);
+            color: var(--color-white);
         }
+
         .btn:hover:not(:disabled) {
-            background:rgba(34,197,94,0.16);
-            color:var(--color-white);
-            transform:scale(1.08);
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.25);
         }
-        .btn:disabled { opacity:0.38; cursor:not-allowed;}
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
 
         .progress-bar {
             width: 100%;
             height: 6px;
-            background: rgba(255,255,255,0.10);
-            border-radius:4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
             overflow: hidden;
-            margin-top:10px;
-            margin-bottom:1px;
+            margin-top: var(--space-16);
         }
+
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg,rgba(255,255,255,0.38),rgba(255,255,255,0.55));
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
             width: 0%;
-            transition: width 0.25s cubic-bezier(0.29,0.64,0.53,1);
+            transition: width 0.3s ease;
         }
-        /* About Button & Modal */
+
+        .fullscreen-btn {
+            position: fixed;
+            top: var(--space-16);
+            right: var(--space-16);
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-base);
+            background: rgba(255, 255, 255, 0.18);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: var(--color-white);
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--duration-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
+        }
+
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fullscreen-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .fullscreen-container.active {
+            display: flex;
+        }
+
+        .fullscreen-close-btn {
+            position: fixed;
+            top: var(--space-16);
+            right: var(--space-16);
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-base);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: var(--color-white);
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--duration-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 2001;
+        }
+
+        .fullscreen-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
+        }
+
+        .fullscreen-close-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            .timer-display {
+                font-size: clamp(40px, 12vw, 60px);
+                min-height: 110px;
+                padding: var(--space-16);
+            }
+
+            .timer-display.fullscreen {
+                font-size: clamp(60px, 20vw, 150px);
+            }
+
+            .header h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            .button-group {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .controls {
+                padding: var(--space-16);
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                gap: var(--space-24);
+            }
+
+            .fullscreen-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                top: var(--space-12);
+                right: var(--space-12);
+            }
+
+            .fullscreen-close-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                top: var(--space-12);
+                right: var(--space-12);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-display {
+                font-size: clamp(32px, 10vw, 48px);
+            }
+
+            .timer-display.fullscreen {
+                font-size: clamp(48px, 18vw, 120px);
+            }
+
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: var(--font-size-xl);
+            }
+
+            .stage-indicator {
+                font-size: var(--font-size-base);
+                padding: var(--space-8) var(--space-16);
+            }
+
+            .fullscreen-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .fullscreen-close-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+        }
+
         .about-btn {
             position: fixed;
             bottom: var(--space-20);
             right: var(--space-20);
-            width: 54px; height: 54px; border-radius: 50%;
-            background: rgba(255,255,255,0.18);
-            border: 2px solid rgba(255,255,255,0.33);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             color: var(--color-white);
-            font-size: 23px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 190ms cubic-bezier(.71,-0.01,.4,1.42);
-            display: flex; align-items:center; justify-content:center;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-            backdrop-filter: blur(7px);
-            z-index:9999;
+            transition: all var(--duration-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 999;
         }
+
         .about-btn:hover {
-            background:rgba(255,255,255,0.29);
-            transform:scale(1.13);
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.25);
         }
+
+        .about-btn:active {
+            transform: scale(0.95);
+        }
+
         .about-modal {
             position: fixed;
             bottom: 80px;
             right: var(--space-20);
-            background:rgba(0,0,0,0.95);
-            border:2px solid rgba(255,255,255,0.26);
-            border-radius:var(--radius-xl);
-            padding:var(--space-20) var(--space-20) var(--space-12) var(--space-20);
-            backdrop-filter: blur(15px);
-            box-shadow:0 20px 66px rgba(0,0,0,0.57);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: var(--space-20);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             color: var(--color-white);
-            min-width:220px; max-width: 300px;
-            opacity:0; visibility:hidden; transform:translateY(14px);
-            transition:all 220ms cubic-bezier(.71,0,.42,1.3);
-            z-index:9988;
-            pointer-events:none;
+            min-width: 280px;
+            max-width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all var(--duration-normal);
+            z-index: 998;
         }
+
         .about-modal.show {
-            opacity: 1; visibility:visible; transform:translateY(0);
-            pointer-events:auto;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
+
         .about-modal h3 {
-            font-size: var(--font-size-xl,18px);
-            margin: 0 0 var(--space-12) 0;
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-12);
             text-align: center;
-            color: #fff;
+            color: rgba(255, 255, 255, 1);
         }
+
+        .about-modal p {
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+            margin-bottom: var(--space-16);
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+        }
+
+        .about-modal .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: var(--space-12) 0;
+        }
+
         .about-modal .contact-item {
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: var(--space-8);
-            font-size: 14px;
-            margin-bottom: 12px;
-            padding: 7px 0;
-            background:none;
+            margin: var(--space-8) 0;
+            padding: var(--space-8) var(--space-12);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-base);
+            transition: all var(--duration-normal);
         }
-        .about-modal .contact-item a { color:var(--color-green); text-decoration:underline; }
+
+        .about-modal .contact-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .about-modal .contact-item a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            word-break: break-all;
+        }
+
+        .about-modal .contact-item a:hover {
+            color: var(--color-white);
+        }
+
         .close-modal {
             position: absolute;
-            top: 7px; right: 7px;
-            width: 28px; height: 28px;
+            top: var(--space-8);
+            right: var(--space-8);
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
             border-radius: 50%;
-            background:rgba(255,255,255,0.05);
-            border:none;
             color: var(--color-white);
-            font-size:16px;
-            cursor:pointer; transition: background .18s;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all var(--duration-normal);
         }
-        .close-modal:hover { background:rgba(34,197,94,0.2);}
-        @media (max-width:700px){
-            .container{padding:18px 5px 12px 5px;max-width:97vw;}
-        }
-        @media (max-width:480px){
-            .timer-display{font-size:36px;padding:10px;}
-            .header h1{font-size:22px;}
-            .stage-indicator{font-size:15px;padding:7px 9px;}
-            .about-btn {width:41px; height:41px; font-size:18px; bottom:9px; right:9px;}
-            .about-modal{min-width:168px;padding:13px 5px 10px 5px;}
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.35);
         }
     </style>
 </head>
 <body class="stage-black">
-    <div class="container">
+    <button class="fullscreen-btn" id="fullscreenBtn" title="Fullscreen Mode">⛶</button>
+
+    <div class="container" id="mainContainer">
         <div class="header">
             <h1>🎤 Toastmasters Timer Pro</h1>
             <div class="stage-indicator" id="stageIndicator">
@@ -325,6 +656,7 @@
                 <span>Select a Speech</span>
             </div>
         </div>
+
         <div class="controls">
             <div class="control-group">
                 <label for="speechType">🗣️ Select Speech Type</label>
@@ -339,6 +671,7 @@
                     <option value="pathways18-22">Extended Pathways – 18 to 22 minutes</option>
                 </select>
             </div>
+
             <div class="control-group">
                 <label>⏱️ Or Set Custom Time</label>
                 <div class="custom-time-inputs">
@@ -346,54 +679,67 @@
                     <input type="number" id="customSeconds" placeholder="Seconds" min="0" max="59">
                 </div>
             </div>
+
             <div class="preset-buttons" id="presetButtons"></div>
         </div>
+
         <div class="timer-display" id="timerDisplay">00:00</div>
+
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
+
         <div class="button-group" id="buttonGroup">
             <button class="btn" id="startBtn">▶ Start</button>
             <button class="btn" id="pauseBtn" disabled>⏸ Pause</button>
             <button class="btn" id="resetBtn">🔄 Reset</button>
         </div>
     </div>
-    <!-- About Button -->
+
+    <div class="fullscreen-container" id="fullscreenContainer">
+        <button class="fullscreen-close-btn" id="fullscreenCloseBtn">✕</button>
+        <div class="timer-display fullscreen" id="fullscreenTimerDisplay">00:00</div>
+    </div>
+
     <button class="about-btn" id="aboutBtn" title="About Developer">?</button>
-    <!-- About Modal -->
+
     <div class="about-modal" id="aboutModal">
         <button class="close-modal" id="closeModal">✕</button>
         <h3>👨‍💻 Developer</h3>
-        <div class="contact-item">
-            <span>👤</span>
-            <span>Rishib More</span>
-        </div>
+        <p style="font-weight: 600; color: rgba(255, 255, 255, 1); margin-bottom: var(--space-8);">Rishib More</p>
+        <div class="divider"></div>
         <div class="contact-item">
             <span>📧</span>
             <a href="mailto:rishibmore141@gmail.com">rishibmore141@gmail.com</a>
         </div>
     </div>
+
     <script>
-        // ==== Timer State ====
         const timerState = {
-            timeLeft: 0, totalTime: 0, isRunning: false, intervalId: null,
-            currentStage: 'black', selectedSpeech: null
+            timeLeft: 0,
+            totalTime: 0,
+            isRunning: false,
+            intervalId: null,
+            currentStage: 'black',
+            selectedSpeech: null,
+            isFullscreen: false
         };
-        // ==== Official timings ====
+
         const speechTypes = {
-            prepared: { name: 'Prepared Speech', range: '5–7 min', maxTime: 7*60},
-            icebreaker: { name: 'Ice Breaker', range: '4–6 min', maxTime: 6*60},
-            tabletopics: { name: 'Table Topics', range: '1–2 min', maxTime: 2*60},
-            evaluation: { name: 'Speech Evaluation', range: '2–3 min', maxTime: 3*60},
-            'pathways8-10': { name: 'Extended Pathways', range: '8–10 min', maxTime: 10*60 },
-            'pathways10-12': { name: 'Extended Pathways', range: '10–12 min', maxTime: 12*60 },
-            'pathways18-22': { name: 'Extended Pathways', range: '18–22 min', maxTime: 22*60 }
+            prepared: { name: 'Prepared Speech', range: '5–7 min', maxTime: 7 * 60 },
+            icebreaker: { name: 'Ice Breaker', range: '4–6 min', maxTime: 6 * 60 },
+            tabletopics: { name: 'Table Topics', range: '1–2 min', maxTime: 2 * 60 },
+            evaluation: { name: 'Speech Evaluation', range: '2–3 min', maxTime: 3 * 60 },
+            'pathways8-10': { name: 'Extended Pathways', range: '8–10 min', maxTime: 10 * 60 },
+            'pathways10-12': { name: 'Extended Pathways', range: '10–12 min', maxTime: 12 * 60 },
+            'pathways18-22': { name: 'Extended Pathways', range: '18–22 min', maxTime: 22 * 60 }
         };
-        // ==== DOM elements ====
+
         const speechTypeSelect = document.getElementById('speechType');
         const customMinutesInput = document.getElementById('customMinutes');
         const customSecondsInput = document.getElementById('customSeconds');
         const timerDisplay = document.getElementById('timerDisplay');
+        const fullscreenTimerDisplay = document.getElementById('fullscreenTimerDisplay');
         const stageIndicator = document.getElementById('stageIndicator');
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
@@ -401,34 +747,45 @@
         const presetButtonsContainer = document.getElementById('presetButtons');
         const progressFill = document.getElementById('progressFill');
         const body = document.body;
-        // ==== Build preset buttons ====
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const fullscreenCloseBtn = document.getElementById('fullscreenCloseBtn');
+        const fullscreenContainer = document.getElementById('fullscreenContainer');
+        const mainContainer = document.getElementById('mainContainer');
+
         function initializePresets() {
             presetButtonsContainer.innerHTML = '';
             Object.entries(speechTypes).forEach(([key, value]) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn--preset';
                 btn.textContent = value.name.split('(')[0].trim();
-                btn.title = value.name+' '+value.range;
+                btn.title = value.name + ' ' + value.range;
                 btn.dataset.key = key;
                 btn.addEventListener('click', () => selectPreset(key));
                 presetButtonsContainer.appendChild(btn);
             });
         }
-        // ==== Timer logic ====
+
         function formatTime(seconds) {
-            const mins = Math.floor(seconds/60), secs = seconds%60;
-            return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
+
         function getPercentageElapsed() {
             if (timerState.totalTime === 0) return 0;
             return ((timerState.totalTime - timerState.timeLeft) / timerState.totalTime) * 100;
         }
-        function updateStage(forceCompleteRed) {
+
+        function updateStage() {
+            if (!timerState.isRunning) return;
+
             const percentElapsed = getPercentageElapsed();
             let newStage = 'black';
-            if (timerState.timeLeft === 0 || forceCompleteRed) {
-                // 🔴 Force red card to flash at 0 no matter what
+
+            if (timerState.timeLeft === 0) {
                 newStage = 'complete';
+            } else if (percentElapsed >= 100) {
+                newStage = 'red';
             } else if (percentElapsed >= 70) {
                 newStage = 'yellow';
             } else if (percentElapsed >= 30) {
@@ -436,141 +793,272 @@
             } else {
                 newStage = 'black';
             }
-            if (newStage !== timerState.currentStage) setStage(newStage);
+
+            if (newStage !== timerState.currentStage) {
+                setStage(newStage);
+            }
         }
+
         function setStage(stage) {
             timerState.currentStage = stage;
-            body.classList.remove('stage-black','stage-green','stage-yellow','stage-red','stage-complete');
-            switch(stage) {
-                case 'green': body.classList.add('stage-green');
-                    stageIndicator.innerHTML = `<span class="stage-dot" style="background:var(--color-green)"></span>🟩 Green Stage`; break;
-                case 'yellow': body.classList.add('stage-yellow');
-                    stageIndicator.innerHTML = `<span class="stage-dot" style="background:var(--color-yellow)"></span>🟨 Yellow Stage`; break;
-                case 'red': // should never be used directly, always handled by complete
+
+            body.classList.remove('stage-black', 'stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+
+            switch (stage) {
+                case 'green':
+                    body.classList.add('stage-green');
+                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(34, 197, 94, 1);"></span><span>🟩 Green Stage</span>';
+                    break;
+                case 'yellow':
+                    body.classList.add('stage-yellow');
+                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(234, 179, 8, 1);"></span><span>🟨 Yellow Stage</span>';
+                    break;
+                case 'red':
+                    body.classList.add('stage-red');
+                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(192, 21, 47, 1);"></span><span>🟥 Red Stage</span>';
                     break;
                 case 'complete':
                     body.classList.add('stage-complete');
-                    stageIndicator.innerHTML = `<span class="stage-dot" style="background:var(--color-red-bright)"></span>⏹️ Time Up!`;
+                    stageIndicator.innerHTML = '<span class="stage-dot" style="background: rgba(255, 84, 89, 1); animation: none;"></span><span>⏹️ Time Up!</span>';
+                    playSound();
                     break;
                 default:
                     body.classList.add('stage-black');
-                    stageIndicator.innerHTML = `<span class="stage-dot"></span>Ready to Start`;
+                    stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+                    break;
             }
         }
+
         function playSound() {
             try {
-                const audioContext = new(window.AudioContext||window.webkitAudioContext)();
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode); gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 800; oscillator.type='sine';
-                gainNode.gain.setValueAtTime(0.3,audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01,audioContext.currentTime+0.5);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
                 oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime+0.5);
-            } catch(e){}
-        }
-        function updateDisplay() {
-            timerDisplay.textContent = formatTime(timerState.timeLeft);
-            progressFill.style.width = getPercentageElapsed() + '%';
-            // If timeLeft == 0, force continuous flashing red
-            updateStage(timerState.timeLeft === 0);
-            if (timerState.timeLeft<=3 && timerState.timeLeft>0 && timerState.isRunning) {
-                timerDisplay.classList.add('pulse');
-            } else {
-                timerDisplay.classList.remove('pulse');
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not available');
             }
         }
+
+        function updateDisplay() {
+            timerDisplay.textContent = formatTime(timerState.timeLeft);
+            fullscreenTimerDisplay.textContent = formatTime(timerState.timeLeft);
+            const progress = getPercentageElapsed();
+            progressFill.style.width = progress + '%';
+            updateStage();
+
+            if (timerState.timeLeft <= 3 && timerState.timeLeft > 0 && timerState.isRunning) {
+                timerDisplay.classList.add('pulse');
+                fullscreenTimerDisplay.classList.add('pulse');
+            } else {
+                timerDisplay.classList.remove('pulse');
+                fullscreenTimerDisplay.classList.remove('pulse');
+            }
+        }
+
         function start() {
             if (timerState.timeLeft === 0) return;
-            timerState.isRunning = true; startBtn.disabled = true;
+
+            timerState.isRunning = true;
+            startBtn.disabled = true;
             pauseBtn.disabled = false;
-            speechTypeSelect.disabled = true; customMinutesInput.disabled = true; customSecondsInput.disabled = true;
-            let beeped = false;
+            speechTypeSelect.disabled = true;
+            customMinutesInput.disabled = true;
+            customSecondsInput.disabled = true;
+
+            // Show fullscreen on start if not already showing
+            if (!timerState.isFullscreen) {
+                enterFullscreen();
+            }
+
             timerState.intervalId = setInterval(() => {
                 if (timerState.timeLeft > 0) {
-                    timerState.timeLeft--; updateDisplay();
+                    timerState.timeLeft--;
+                    updateDisplay();
                 } else {
-                    if (!beeped) { playSound(); beeped = true; }
-                    updateDisplay(); // STAYS flashing!
+                    stop();
                 }
             }, 1000);
         }
+
         function togglePause() {
             if (timerState.isRunning) {
-                clearInterval(timerState.intervalId); timerState.isRunning=false;
-                pauseBtn.textContent='▶ Resume'; startBtn.disabled=false;
-            } else { start(); pauseBtn.textContent='⏸ Pause'; }
+                clearInterval(timerState.intervalId);
+                timerState.isRunning = false;
+                pauseBtn.textContent = '▶ Resume';
+                startBtn.disabled = false;
+            } else {
+                start();
+                pauseBtn.textContent = '⏸ Pause';
+            }
         }
+
         function stop() {
             clearInterval(timerState.intervalId);
-            timerState.isRunning=false;
-            startBtn.disabled=false;
-            pauseBtn.disabled=true; pauseBtn.textContent='⏸ Pause';
-            speechTypeSelect.disabled=false; customMinutesInput.disabled=false; customSecondsInput.disabled=false;
+            timerState.isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸ Pause';
+            speechTypeSelect.disabled = false;
+            customMinutesInput.disabled = false;
+            customSecondsInput.disabled = false;
         }
+
         function reset() {
-            clearInterval(timerState.intervalId); timerState.isRunning=false;
+            clearInterval(timerState.intervalId);
+            timerState.isRunning = false;
             timerState.timeLeft = timerState.totalTime;
-            startBtn.disabled=false; pauseBtn.disabled=true; pauseBtn.textContent='⏸ Pause';
-            speechTypeSelect.disabled=false; customMinutesInput.disabled=false; customSecondsInput.disabled=false;
-            body.classList.remove('stage-green','stage-yellow','stage-red','stage-complete');
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '⏸ Pause';
+            speechTypeSelect.disabled = false;
+            customMinutesInput.disabled = false;
+            customSecondsInput.disabled = false;
+
+            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
             body.classList.add('stage-black');
-            timerState.currentStage='black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span>Ready to Start';
-            progressFill.style.width='0%'; updateDisplay();
+            timerState.currentStage = 'black';
+            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            progressFill.style.width = '0%';
+
+            // Exit fullscreen on reset
+            if (timerState.isFullscreen) {
+                exitFullscreen();
+            }
+
+            updateDisplay();
         }
+
         function selectPreset(key) {
             const speech = speechTypes[key];
             timerState.totalTime = speech.maxTime;
-            timerState.timeLeft = speech.maxTime; timerState.selectedSpeech=key;
-            document.querySelectorAll('.btn--preset').forEach(btn=>{
-                btn.classList.toggle('active',btn.dataset.key===key);
+            timerState.timeLeft = speech.maxTime;
+            timerState.selectedSpeech = key;
+
+            document.querySelectorAll('.btn--preset').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.key === key);
             });
-            customMinutesInput.value='';customSecondsInput.value='';speechTypeSelect.value='';
-            body.classList.remove('stage-green','stage-yellow','stage-red','stage-complete');
+
+            customMinutesInput.value = '';
+            customSecondsInput.value = '';
+            speechTypeSelect.value = '';
+
+            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
             body.classList.add('stage-black');
-            timerState.currentStage='black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span>Ready to Start';
-            progressFill.style.width='0%';
+            timerState.currentStage = 'black';
+            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            progressFill.style.width = '0%';
+
             updateDisplay();
         }
-        function setCustomTime() {
-            const mins = parseInt(customMinutesInput.value)||0, secs=parseInt(customSecondsInput.value)||0;
-            const totalSeconds=mins*60+secs; if(totalSeconds===0)return;
-            timerState.totalTime=totalSeconds; timerState.timeLeft=totalSeconds; timerState.selectedSpeech=null;
-            document.querySelectorAll('.btn--preset').forEach(btn=>btn.classList.remove('active'));
-            speechTypeSelect.value='';
-            body.classList.remove('stage-green','stage-yellow','stage-red','stage-complete');
-            body.classList.add('stage-black');
-            timerState.currentStage='black';
-            stageIndicator.innerHTML = '<span class="stage-dot"></span>Ready to Start';
-            progressFill.style.width = '0%'; updateDisplay();
-        }
-        // ==== Event Listeners ====
-        startBtn.addEventListener('click',start);
-        pauseBtn.addEventListener('click',togglePause);
-        resetBtn.addEventListener('click',reset);
-        speechTypeSelect.addEventListener('change',(e)=>{if(e.target.value)selectPreset(e.target.value);});
-        customMinutesInput.addEventListener('change',setCustomTime);
-        customSecondsInput.addEventListener('change',setCustomTime);
 
-        // ==== About Button/Modal ====
+        function setCustomTime() {
+            const mins = parseInt(customMinutesInput.value) || 0;
+            const secs = parseInt(customSecondsInput.value) || 0;
+            const totalSeconds = mins * 60 + secs;
+
+            if (totalSeconds === 0) return;
+
+            timerState.totalTime = totalSeconds;
+            timerState.timeLeft = totalSeconds;
+            timerState.selectedSpeech = null;
+
+            document.querySelectorAll('.btn--preset').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            speechTypeSelect.value = '';
+
+            body.classList.remove('stage-green', 'stage-yellow', 'stage-red', 'stage-complete');
+            body.classList.add('stage-black');
+            timerState.currentStage = 'black';
+            stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Ready to Start</span>';
+            progressFill.style.width = '0%';
+
+            updateDisplay();
+        }
+
+        function enterFullscreen() {
+            timerState.isFullscreen = true;
+            mainContainer.classList.add('fullscreen-active');
+            fullscreenContainer.classList.add('active');
+            fullscreenBtn.style.display = 'none';
+            document.getElementById('aboutBtn').style.display = 'none';
+        }
+
+        function exitFullscreen() {
+            timerState.isFullscreen = false;
+            mainContainer.classList.remove('fullscreen-active');
+            fullscreenContainer.classList.remove('active');
+            fullscreenBtn.style.display = 'flex';
+            document.getElementById('aboutBtn').style.display = 'flex';
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', start);
+        pauseBtn.addEventListener('click', togglePause);
+        resetBtn.addEventListener('click', reset);
+
+        fullscreenBtn.addEventListener('click', enterFullscreen);
+        fullscreenCloseBtn.addEventListener('click', exitFullscreen);
+
+        speechTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                selectPreset(e.target.value);
+            }
+        });
+
+        customMinutesInput.addEventListener('change', setCustomTime);
+        customSecondsInput.addEventListener('change', setCustomTime);
+
+        // Keyboard escape to exit fullscreen
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && timerState.isFullscreen) {
+                exitFullscreen();
+            }
+        });
+
+        // Initialize
+        initializePresets();
+        body.classList.add('stage-black');
+        timerDisplay.textContent = '00:00';
+        fullscreenTimerDisplay.textContent = '00:00';
+        stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Select a Speech Type</span>';
+
+        // About Modal
         const aboutBtn = document.getElementById('aboutBtn');
         const aboutModal = document.getElementById('aboutModal');
         const closeModal = document.getElementById('closeModal');
-        aboutBtn.addEventListener('click',()=>{aboutModal.classList.toggle('show');});
-        closeModal.addEventListener('click',(e)=>{e.stopPropagation();aboutModal.classList.remove('show');});
-        document.addEventListener('click',(e)=>{
-            if(!aboutBtn.contains(e.target) && !aboutModal.contains(e.target)) aboutModal.classList.remove('show');
-        });
-        aboutModal.addEventListener('click',(e)=>{e.stopPropagation();});
 
-        // ==== Initialize ====
-        initializePresets();
-        body.classList.add('stage-black');
-        timerDisplay.textContent='00:00';
-        stageIndicator.innerHTML = '<span class="stage-dot"></span><span>Select a Speech</span>';
+        aboutBtn.addEventListener('click', () => {
+            aboutModal.classList.toggle('show');
+        });
+
+        closeModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            aboutModal.classList.remove('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!aboutBtn.contains(e.target) && !aboutModal.contains(e.target)) {
+                aboutModal.classList.remove('show');
+            }
+        });
+
+        aboutModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
     </script>
 </body>
 </html>
